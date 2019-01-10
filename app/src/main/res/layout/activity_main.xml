@@ -66,12 +66,21 @@
 
     </LinearLayout>
 
-<EditText
-    android:id="@+id/ed"
+    <View
+        android:id="@+id/vrev"
+        android:layout_below="@id/btnrev"
+        android:layout_marginTop="20dp"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@android:color/darker_gray"/>
+<android.support.v7.widget.RecyclerView
+    android:id="@+id/rv_main"
+    android:layout_marginTop="20dp"
+    android:layout_below="@id/vrev"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:layout_below="@+id/btnrev"
-    />
+    android:layout_height="match_parent">
 
+
+</android.support.v7.widget.RecyclerView>
 
 </RelativeLayout>

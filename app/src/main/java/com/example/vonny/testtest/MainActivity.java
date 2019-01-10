@@ -3,11 +3,17 @@ package com.example.vonny.testtest;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RatingBar;
 import android.widget.Toast;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -17,45 +23,41 @@ import static android.icu.lang.UCharacter.GraphemeClusterBreak.V;
 
 public class MainActivity extends AppCompatActivity {
 
-    public RatingBar ratingBar;
-    private EditText review;
-    private Button kirim;
+    private List<ReviewModel> reviewModelList = new ArrayList<>();
+    private RecyclerView recyclerView;
+    private ReviewAdapter reviewAdapter;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-        ratingBar = findViewById(R.id.rating);
-        review = findViewById(R.id.ed_review);
-        kirim = findViewById(R.id.butonkirim);
-        ReviewRequest reviewRequest = new ReviewRequest();
 
-        kirim.setOnClickListener((View V) ->{
+        recyclerView = findViewById(R.id.rv_main);
+        reviewAdapter = new ReviewAdapter(MainActivity.this,reviewModelList);
+        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(MainActivity.this);
+        recyclerView.setLayoutManager(mLayoutManager);
+        recyclerView.setItemAnimator(new DefaultItemAnimator());
+        recyclerView.setAdapter(reviewAdapter);
 
-            reviewRequest.setTextreview(review.getText().toString());
-            EndPoint service = Retrofit.getRetrofitInstance(MainActivity.this).create(EndPoint.class);
-            Call<ReviewResponse> call = service.doReview(reviewRequest);
-            call.enqueue(new Callback<ReviewResponse>() {
-                @Override
-                public void onResponse(Call<ReviewResponse> call, Response<ReviewResponse> response) {
+        EndPoint service = Retrofit.getRetrofitInstance(MainActivity.this).create(EndPoint.class);
+        Call<ReviewResponse> call = service.getReview();
+        call.enqueue(new Callback<ReviewResponse>() {
+            @Override
+            public void onResponse(Call<ReviewResponse> call, Response<ReviewResponse> response) {
+                getData(response.body().getData());
+            }
 
-                }
+            @Override
+            public void onFailure(Call<ReviewResponse> call, Throwable t) {
 
-                @Override
-                public void onFailure(Call<ReviewResponse> call, Throwable t) {
-
-                }
-            });
+            }
         });
-
-    }
-
-    public void rateme(View view)
-    {Toast.makeText(getApplicationContext(),String.valueOf(ratingBar.getRating()), Toast.LENGTH_LONG).show();
-
     }
 
 
+    private void getData(List<ReviewModel> data) {
+        reviewModelList.addAll(data);
+        reviewAdapter.notifyDataSetChanged();
+    }
 
 
 }
