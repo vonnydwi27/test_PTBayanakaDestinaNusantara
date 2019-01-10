@@ -39,7 +39,7 @@ public class Retrofit {
         if (retrofit == null)
         {
             retrofit=new retrofit2.Retrofit.Builder()
-                    .baseUrl("http://www.kefasproject.com")
+                    .baseUrl("https://dry-fortress-35321.herokuapp.com")
                     .addConverterFactory(GsonConverterFactory.create())
                     .client(okHttpClient)
                     .build();

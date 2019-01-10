@@ -7,7 +7,7 @@ import retrofit2.http.POST;
 
 public interface EndPoint {
 
-    @GET("/reviews/create")
+    @GET("/reviews/getall")
     Call<ReviewResponse> getReview();
 
 }
